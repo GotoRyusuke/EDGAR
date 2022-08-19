@@ -1,9 +1,6 @@
-"""
-根据RD词典判断该句子是否和labor相关
-"""
+# -*- coding: utf-8 -*-
 import pandas as pd
 from collections import Counter
-
 
 def cut_sentence(talk_content):
     talk_sentences = []
@@ -19,7 +16,6 @@ def cut_sentence(talk_content):
             if talk_word[-1] in [".", "?", "!"]:
                 if talk_word[:-1] not in exception_rule:
                     if talk_words[w_i + 1][0].isupper():
-                        # 只需要首字母大写
                         talk_sentences.append(" ".join(talk_words[last_sentence_idx: w_i + 1]))
                         last_sentence_idx = w_i + 1
     return talk_sentences
@@ -27,7 +23,6 @@ def cut_sentence(talk_content):
 
 def find_first_word_index(phrases: list, sentence: list):
     first_words_index_dict = {}
-    # 确定词的在句中的位置 可能还不止一处
     for phrase in phrases:
         first_word_star = phrase[0]
         if first_word_star not in first_words_index_dict.keys():
@@ -42,7 +37,6 @@ def find_first_word_index(phrases: list, sentence: list):
 
 
 def phrase_in_sentence(phrase: list,  first_word_index: list, sentence: list):
-    # 判断词组是否在句中
     for f_idx in first_word_index:
         flag = True
         for kw_i in range(len(phrase)):
@@ -78,7 +72,7 @@ def count_words_in_text(words_list, text_words):
 
 def count_sentences_in_text(words_list, text_sentences: list):
     dict_count = 0
-    symbols = [",", ".", "!", "?"]  # 标点符号删去
+    symbols = [",", ".", "!", "?"] 
     for sent in text_sentences:
         for symbol in symbols:
             sent = sent.replace(symbol, "").lower()

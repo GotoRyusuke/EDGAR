@@ -23,5 +23,7 @@ All 3 parsers utilise a module called [`matching_strategies`](./Parsers/matching
 ### 3. PHRASE2VEC
 In [`trian_phrase2vec`](./Phrase2Vec/train_phrase2vec.py) we train a phrase2vec model based on the corpus constructed by merging all texts under 10-K Item1A and Item7, where a bigram transformer is adopted to recognise bigram or trigram phrases in the texts. After the training, we use [`get_similar`](./Phrase2Vec/get_similar.py) to expand our dict at hand, trying to find words or/and phrases that involve the conflict between Ukraine and Russia.
 
-### 4. COUNTER
-In this part, we develop a counter to calculate word freqs in the forms we collect. The main logic is isolated to a single module called [`russia_counter`](./Counter/russia_counter.py), and the procedures of going over all forms and calculating the word/phrase freqs are performed by [`russia_8k`](./Counter/russia_8k.py).
+### 4. COUNTERS
+In this part, we develop 2 counters to calculate word freqs in the forms we collect. The main logic is isolated to 2 modules called [`russia_counter`](./Counter/russia_counter.py) and [`russia_counter_lemma`](./Counters/russia_counter_lemma.py), and the procedures of going over all forms and calculating the word/phrase freqs are performed by [`russia_8k`](./Counter/russia_8k.py).
+
+`russia_counter` calculates the word freq by exact words, i.e. only counting the word when it is in exactly the the form as in the dict. The `russia_counter_lemma`, however, counts the word when it has the same lemma as some words in the dict. The logic is almost the same, so you can go over only [`russia_counter_lemma`](./Counters/russia_counter_lemma.py) in detail as it has more comments to help you understand.

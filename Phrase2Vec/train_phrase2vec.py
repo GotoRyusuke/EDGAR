@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 A series of modules to do the following things:
 1. cut the content in every single file into sentences, eliminates the punctuations,
@@ -5,7 +6,7 @@ and converts all letters into lower case
 2. eliminate stop words, merge into a single txt file
 3. run word2vec on the file
 
-This module is for task 2
+This file is for task 2
 
 '''
 import os

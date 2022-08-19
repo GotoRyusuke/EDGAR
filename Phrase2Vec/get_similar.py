@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 DESCRIPTION
 -----------
@@ -21,7 +22,7 @@ OTHER INFO.
 - Last upate: R4/7/27(Sui)
 - Author: GOTO Ryusuke 
 - Contact: 
-    - Email: 1155169839@link.cuhk.edu.hk (preferred)
+    - Email: yuhang1012long@link.cuhk.edu.hk (preferred)
     - WeChat: L13079237
 '''
 
