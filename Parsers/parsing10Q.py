@@ -13,7 +13,7 @@ CONTENTS
 
 OTHER INFO.
 -----------
-- Last upate: R4/8/9(Ka)
+- Last upate: R4/8/20(Do)
 - Author: GOTO Ryusuke 
 - Contact: 
     - Email: yuhang1012long@link.cuhk.edu.hk (preferred)
@@ -108,7 +108,10 @@ class Parsing10Q:
         with open(single_path, 'r') as f:
             content = f.read()
         
-        results = {'item2':0, 'item1a':0, 'if10k': 0, 'ifnos':0}
+        results = {'item2':0, 'item1a':0, 
+                   'if10k': 0, 'ifnos':0,
+                   'item2_path': '', 'item1a_path': ''}
+        
         for item_name in ['item2', 'item1a']:
             try:
                 docs, item_tb = self.strategies.first_method(content)
@@ -116,11 +119,15 @@ class Parsing10Q:
             except:
                 docs, item_tb= self.strategies.second_method(content)
                 item = self.extract_items(docs, item_tb, 'item',2)
+            
+            if len(item) > 0:
                 results[item_name] = 1
                 item_filename = item_store_path + '/' + txt_filename + '_' + item_name + '.txt'
-
+                results[item_name + '_path'] = '10-Q/' + cik + '/' + txt_filename + '_' + item_name + '.txt'
+                
                 with open(item_filename, 'w') as f:
                     f.write(item)
+                    
             if item_name == 'item1a':
                 # find 10K
                 if '10-K' in item:
@@ -157,13 +164,9 @@ class Parsing10Q:
                 results = self.export_single_file(file)
                 
                 values = list(results.values())
-                sub_df.loc[idx,['I2_y', 'I1A_y', 'I1A_if10k', 'I1A_ifnos']] = values
-
-                if results['I2_y'] == 1:
-                    sub_df.loc[idx, 'I2_adrs'] = file.split('.')[0] + '_item2.txt'
-                
-                if results['item1a'] == 1:
-                    sub_df.loc[idx, 'I1A_adrs'] = file.split('.')[0] + '_item1a.txt'
+                sub_df.loc[idx,['I2_y', 'I1A_y', 
+                                'I1A_if10k', 'I1A_ifnos',
+                                'I2_adrs', 'I1A_adrs']] = values
 
             return sub_df
         
@@ -176,8 +179,8 @@ class Parsing10Q:
     
 if __name__ == '__main__':
     store_path = 'F:/EDGAR/Extracted/10-Q'
-    panel_df_path = 'F:/EDGAR/2022Q2_10-Q.xlsx'
+    panel_df_path = 'F:/EDGAR/2022Q2_10-Q_dropdup.xlsx'
     
     parser = Parsing10Q(panel_df_path,store_path)
-    form10q_df = parser.threading(4)
-    form10q_df.to_excel('F:/EDGAR/2022Q2_10-Q_ver2.xlsx', index = False)
+    form10q_df = parser.threading(2)
+    # form10q_df.to_excel('F:/EDGAR/2022Q2_10-Q_ver2.xlsx', index = False)
