@@ -183,4 +183,4 @@ if __name__ == '__main__':
     
     parser = Parsing10Q(panel_df_path,store_path)
     form10q_df = parser.threading(2)
-    # form10q_df.to_excel('F:/EDGAR/2022Q2_10-Q_ver2.xlsx', index = False)
+    form10q_df.to_excel('F:/EDGAR/2022Q2_10-Q_ver2.xlsx', index = False)
