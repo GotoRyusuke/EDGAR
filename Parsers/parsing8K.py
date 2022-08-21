@@ -193,7 +193,7 @@ class Parsing8K:
         cik = single_path.split('/')[-1].split('_')[0]
         txt_filename = single_path.split('/')[-1].split('.')[0]
         item_store_path = self.store_path + '/' + cik 
-        # os.makedirs(item_store_path, exist_ok = True)
+        os.makedirs(item_store_path, exist_ok = True)
         
         with open(single_path, 'r') as f:
             content = f.read()
@@ -203,9 +203,9 @@ class Parsing8K:
         ex991 = item_detector.get_ex991(content)
         if len(ex991) > 0:
             flag_ex991 = 1
-            # ex991_filename = item_store_path + '/' + txt_filename + '_ex991.txt'
-            # with open(ex991_filename, 'w') as f:
-            #     f.write(ex991)
+            ex991_filename = item_store_path + '/' + txt_filename + '_ex991.txt'
+            with open(ex991_filename, 'w') as f:
+                f.write(ex991)
                 
         # a dummy to indicate whether the word 'Exhibit 99.1' is mentioned in 
         # any of the other items found
@@ -233,8 +233,8 @@ class Parsing8K:
                     item_if_ex991 = 1
                 results[item_name] = 1
                 item_filename = item_store_path + '/' + txt_filename + '_' + item_name + '.txt'
-                # with open(item_filename, 'w') as f:
-                #     f.write(item)
+                with open(item_filename, 'w') as f:
+                    f.write(item)
                 results[item_name + '_991'] = item_if_ex991
                     
             results['ex991'] = flag_ex991
@@ -300,18 +300,18 @@ class Parsing8K:
                     sub_df.loc[idx, 'Ex991_adrs'] = '8-K' + file.split('.')[0].split('/')[-1] + '_ex991.txt'
                     
                 if results['item202'] == 1:
-                    sub_df.loc[idx, 'I202_adrs'] = '8-K' + file.split('.')[0].split('/')[-1] + '_item202.txt'
+                    sub_df.loc[idx, 'I202_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item202.txt'
                 
                 if results['item701'] == 1:
-                    sub_df.loc[idx, 'I701_adrs'] = '8-K' + file.split('.')[0].split('/')[-1] + '_item701.txt'
+                    sub_df.loc[idx, 'I701_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item701.txt'
                 
                 if results['item801'] == 1:
-                    sub_df.loc[idx, 'I801_adrs'] = '8-K' + file.split('.')[0].split('/')[-1] + '_item801.txt'
+                    sub_df.loc[idx, 'I801_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item801.txt'
             
             return sub_df
         
         # apply threading
-        output_dfs = Parallel(n_jobs=jobs, verbose=1)(delayed(multi_run)(sub_list) for sub_list in idx_list_cut)
+        output_dfs = Parallel(n_jobs=jobs, verbose=5)(delayed(multi_run)(sub_list) for sub_list in idx_list_cut)
         
         # aggregate sub-dfs created by the threading
         for sub_df in output_dfs:
@@ -322,12 +322,12 @@ class Parsing8K:
         return output
 
 if __name__ == '__main__':
-    store_path = 'F:/EDGAR/TestStore'
+    store_path = 'F:/EDGAR/Extracted/8-K'
     panel_df_path = 'F:/EDGAR/2022Q2_8-K.xlsx'
     
     parser = Parsing8K(panel_df_path, store_path)
     form8k_df = parser.threading(4)
-    form8k_df.to_excel('F:/EDGAR/2022Q2_8-K_ver2.xlsx', index = False)
+    # form8k_df.to_excel('F:/EDGAR/2022Q2_8-K_ver2.xlsx', index = False)
     
     # change var names
     # remove duplicates
