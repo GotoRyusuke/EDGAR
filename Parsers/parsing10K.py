@@ -98,7 +98,7 @@ class Parsing10K:
         with open(single_path, 'r') as f:
             content = f.read()
         
-        results = {'item1a':0, 'item7':0}
+        results = {'item1a':0, 'item7':0, 'item1a_path': '', 'item7_path': ''}
         for item_name in list(results.keys()):
             try:
                 docs, item_tb = self.strategies.first_method(content)
@@ -106,9 +106,12 @@ class Parsing10K:
             except:
                 docs, item_tb= self.strategies.second_method(content)
                 item = self.extract_items(docs, item_tb, 'item',2)
+            
+            if len(item) > 0:
                 results[item_name] = 1
                 item_filename = item_store_path + '/' + txt_filename + '_' + item_name + '.txt'
-
+                results[item_name + '_path'] = '10-K/' + cik + '/' + txt_filename + '_' + item_name + '.txt'
+                
                 with open(item_filename, 'w') as f:
                     f.write(item)
         return results
@@ -130,13 +133,7 @@ class Parsing10K:
                 file = sub_df.loc[idx, 'FileName']
                 results = self.export_single_file(file)
                 
-                sub_df.loc[idx,['I1A_y', 'I7_y']] = list(results.values())
-                
-                if results['item1a'] == 1:
-                    sub_df.loc[idx, 'I1A_adrs'] = file.split('.')[0] + '_item1a.txt'
-                
-                if results['item7'] == 1:
-                    sub_df.loc[idx, 'I7_adrs'] = file.split('.')[0] + '_item7.txt'
+                sub_df.loc[idx,['I1A_y', 'I7_y','I1A_adrs', 'I7_adrs']] = list(results.values())
             
             return sub_df
         
@@ -148,8 +145,7 @@ class Parsing10K:
         return output
 
 if __name__ == '__main__':
-    # store_path = 'F:/EDGAR/Extracted2/10-K'
-    store_path = 'F:/EDGAR/TestStore/10-K'
+    store_path = 'F:/EDGAR/Extracted/10-K'
     panel_df_path = 'F:/EDGAR/2022Q2_10-K.xlsx'
     
     parsing10K = Parsing10K(panel_df_path, store_path)    
