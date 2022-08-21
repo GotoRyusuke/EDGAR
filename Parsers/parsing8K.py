@@ -327,7 +327,7 @@ if __name__ == '__main__':
     
     parser = Parsing8K(panel_df_path, store_path)
     form8k_df = parser.threading(4)
-    # form8k_df.to_excel('F:/EDGAR/2022Q2_8-K_ver2.xlsx', index = False)
+    form8k_df.to_excel('F:/EDGAR/2022Q2_8-K_ver2.xlsx', index = False)
     
     # change var names
     # remove duplicates
