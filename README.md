@@ -1,4 +1,4 @@
-# EDGAR
+# EDGAR（美国证件交易委员会EDGAR报表爬取及报表项目抽取）
 This is a project to:
 - :heavy_check_mark: crawl firm statements & periodic reports from [EDGAR](https://www.sec.gov/edgar.shtml), a system constructed by SEC for firms to upload their statements & reports as well as for investors to check the operation of the firms they care;
 - :heavy_check_mark: extract info about **risks** from the reports;specifically, it would be some **items** that we want to extract and analyse;
