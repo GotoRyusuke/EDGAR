@@ -98,8 +98,8 @@ class Parsing10K:
         with open(single_path, 'r') as f:
             content = f.read()
         
-        results = {'item1a':0, 'item7':0, 'item1a_path': '', 'item7_path': ''}
-        for item_name in list(results.keys()):
+        results = {'item1a':0, 'item1a_path': '', 'item7':0, 'item7_path': ''}
+        for item_name in ['item1a', 'item7']:
             try:
                 docs, item_tb = self.strategies.first_method(content)
                 item = self.extract_items(docs, item_tb, item_name,1)
@@ -133,7 +133,7 @@ class Parsing10K:
                 file = sub_df.loc[idx, 'FileName']
                 results = self.export_single_file(file)
                 
-                sub_df.loc[idx,['I1A_y', 'I7_y','I1A_adrs', 'I7_adrs']] = list(results.values())
+                sub_df.loc[idx,['I1A_y', 'I1A_adrs', 'I7_y', 'I7_adrs']] = list(results.values())
             
             return sub_df
         

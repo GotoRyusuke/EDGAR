@@ -108,9 +108,10 @@ class Parsing10Q:
         with open(single_path, 'r') as f:
             content = f.read()
         
-        results = {'item2':0, 'item1a':0, 
-                   'if10k': 0, 'ifnos':0,
-                   'item2_path': '', 'item1a_path': ''}
+        results = {'item2':0, 'item2_path': '',
+                   'item1a':0, 'item1a_path': '',
+                   'if10k': 0, 'ifnos':0
+                  }
         
         for item_name in ['item2', 'item1a']:
             try:
@@ -164,9 +165,10 @@ class Parsing10Q:
                 results = self.export_single_file(file)
                 
                 values = list(results.values())
-                sub_df.loc[idx,['I2_y', 'I1A_y', 
-                                'I1A_if10k', 'I1A_ifnos',
-                                'I2_adrs', 'I1A_adrs']] = values
+                sub_df.loc[idx,['I2_y', 'I2_adrs',
+                                'I1A_y', 'I1A_adrs',
+                                'I1A_if10k', 'I1A_ifnos'
+                                 ]] = values
 
             return sub_df
         
