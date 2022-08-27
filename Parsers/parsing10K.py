@@ -158,4 +158,4 @@ if __name__ == '__main__':
                         store_path = store_path)
     
     sup_10K = parser.threading(3)
-    
+    sup_10K.to_excel('F:/EDGAR/summary_2022Q2_10-K_sup.xlsx', index = False)
