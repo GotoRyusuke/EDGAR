@@ -301,18 +301,6 @@ class Parsing8K:
                 for key, value in results.items():
                     sub_df.loc[idx, key] = value
 
-                
-                # if results['ex991'] == 1:
-                #     sub_df.loc[idx, 'Ex991_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_ex991.txt'
-                    
-                # if results['item202'] == 1:
-                #     sub_df.loc[idx, 'I202_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item202.txt'
-                
-                # if results['item701'] == 1:
-                #     sub_df.loc[idx, 'I701_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item701.txt'
-                
-                # if results['item801'] == 1:
-                #     sub_df.loc[idx, 'I801_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item801.txt'
             original_names = ['ex991','if_ex991', 'ex991_path',
                             'item202', 'item202_path', 'item202_991',
                             'item701', 'item701_path', 'item701_991',

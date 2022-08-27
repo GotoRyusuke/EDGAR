@@ -13,11 +13,7 @@ CONTENTS
 
 OTHER INFO.
 -----------
-- Last upate: R4/8/8(Getsu)
-- Author: GOTO Ryusuke 
-- Contact: 
-    - Email: yuhang1012long@link.cuhk.edu.hk (preferred)
-    - WeChat: L13079237
+- Last upate: R4/8/28(Nichi)
 
 '''
 from bs4 import BeautifulSoup
@@ -98,14 +94,14 @@ class Parsing10K:
         with open(single_path, 'r') as f:
             content = f.read()
         
-        results = {'item1a':0, 'item1a_path': '', 'item7':0, 'item7_path': ''}
+        results = {'item1a':0, 'item1a_path': ' ', 'item7':0, 'item7_path': ' '}
         for item_name in ['item1a', 'item7']:
             try:
                 docs, item_tb = self.strategies.first_method(content)
                 item = self.extract_items(docs, item_tb, item_name,1)
             except:
                 docs, item_tb= self.strategies.second_method(content)
-                item = self.extract_items(docs, item_tb, 'item',2)
+                item = self.extract_items(docs, item_tb, item_name,2)
             
             if len(item) > 0:
                 results[item_name] = 1
@@ -126,18 +122,26 @@ class Parsing10K:
                 idx_list_cut.append(idx_list[i * num_per_job: (i + 1) * num_per_job])
             else:
                 idx_list_cut.append(idx_list[i * num_per_job:])
-        output = pd.DataFrame()
+
         def multi_run(sub_idx_list):
             sub_df = self.panel_df.loc[sub_idx_list,:]
+            info_names = list(sub_df.columns)
             for idx in sub_idx_list:
-                file = sub_df.loc[idx, 'FileName']
+                file = sub_df.loc[idx, 'f_name']
                 results = self.export_single_file(file)
-                
-                sub_df.loc[idx,['I1A_y', 'I1A_adrs', 'I7_y', 'I7_adrs']] = list(results.values())
+
+                for key, value in results.items():
+                    sub_df.loc[idx, key] = value
+
+            # original_names = ['item1a', 'item1a_path', 'item7', 'item7_path']
+            # sub_df = sub_df.loc[:, info_names + original_names]
+            new_names = ['I1A_y', 'I1A_adrs', 'I7_y', 'I7_adrs']
+            sub_df.columns = info_names + new_names
             
             return sub_df
         
         output_dfs = Parallel(n_jobs=jobs, verbose=1)(delayed(multi_run)(sub_list) for sub_list in idx_list_cut)
+        output = pd.DataFrame()
         for sub_df in output_dfs:
             output = pd.concat([output, sub_df])
         output.sort_values(by = ['CIK'], inplace = True)
