@@ -135,8 +135,8 @@ class Parsing10K:
                 for key, value in results.items():
                     sub_df.loc[idx, key] = value
 
-            # original_names = ['item1a', 'item1a_path', 'item7', 'item7_path']
-            # sub_df = sub_df.loc[:, info_names + original_names]
+            original_names = ['item1a', 'item1a_path', 'item7', 'item7_path']
+            sub_df = sub_df.loc[:, info_names + original_names]
             new_names = ['I1A_y', 'I1A_adrs', 'I7_y', 'I7_adrs']
             sub_df.columns = info_names + new_names
             
@@ -151,9 +151,10 @@ class Parsing10K:
         return output
 
 if __name__ == '__main__':
-    store_path = 'F:/EDGAR/Extracted/10-K'
-    panel_df_path = 'F:/EDGAR/2022Q2_10-K.xlsx'
+    panel_df_path = 'F:/EDGAR/2022Q2_10-K_sup.xlsx'
+    store_path = 'F:/EDGAR/TestStore'
     
-    parsing10K = Parsing10K(panel_df_path, store_path)    
-    form10K_df = parsing10K.threading(4)
-    form10K_df.to_excel('F:/EDGAR/2022Q2_10-K_ver2.xlsx', index = False)
+    parser = Parsing10K(panel_df_path = panel_df_path,
+                        store_path = store_path)
+    
+    sup_10K = parser.threading(2)
