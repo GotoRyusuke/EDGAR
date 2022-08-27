@@ -18,7 +18,6 @@ OTHER INFO.
 '''
 from bs4 import BeautifulSoup
 import pandas as pd
-import re
 import os
 from joblib import Parallel, delayed
 from matching_strategies import cut_unreadable, item_detector
@@ -94,7 +93,10 @@ class Parsing10K:
         with open(single_path, 'r') as f:
             content = f.read()
         
-        results = {'item1a':0, 'item1a_path': ' ', 'item7':0, 'item7_path': ' '}
+        results = {'item1a':0, 
+                    'item1a_path': ' ', 
+                    'item7':0, 
+                    'item7_path': ' '}
         for item_name in ['item1a', 'item7']:
             try:
                 docs, item_tb = self.strategies.first_method(content)

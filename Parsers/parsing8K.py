@@ -285,8 +285,6 @@ class Parsing8K:
                 idx_list_cut.append(idx_list[i * num_per_job: (i + 1) * num_per_job])
             else:
                 idx_list_cut.append(idx_list[i * num_per_job:])
-                
-
         
         # the func to be run in each thread
         def multi_run(sub_idx_list):
