@@ -198,6 +198,12 @@ class Parsing8K:
         with open(single_path, 'r') as f:
             content = f.read()
         
+        # extract and export Exhibit 99.1, item 2.02, item 7.01, and item 8.01, if found
+        results = {'ex991':0,'if_ex991':0, 'ex991_path': ' ',
+                   'item202':0, 'item202_path': ' ', 'item202_991': 0,
+                   'item701':0, 'item701_path': ' ', 'item701_991': 0,
+                   'item801':0, 'item801_path': ' ', 'item801_991': 0}
+
         # extract Exhibit 99.1 and export, if found
         flag_ex991 = 0
         ex991 = item_detector.get_ex991(content)
@@ -206,15 +212,11 @@ class Parsing8K:
             ex991_filename = item_store_path + '/' + txt_filename + '_ex991.txt'
             with open(ex991_filename, 'w') as f:
                 f.write(ex991)
+            ex991_store_path = '8-K/' + cik + '/' + txt_filename + '_ex991.txt'
+            results['ex991_path'] = ex991_store_path
                 
         # a dummy to indicate whether the word 'Exhibit 99.1' is mentioned in 
         # any of the other items found
-        
-        # extract and export item 2.02, item 7.01, and item 8.01, if found
-        results = {'ex991':0,'if_ex991':0,
-                   'item202':0, 'item701':0,'item801':0,
-                   'item202_991': 0,'item701_991': 0,'item801_991': 0}
-        
         flag_if991 = 0
         for item_name in ['item202', 'item701', 'item801']:
             try:
@@ -233,9 +235,14 @@ class Parsing8K:
                     item_if_ex991 = 1
                 results[item_name] = 1
                 item_filename = item_store_path + '/' + txt_filename + '_' + item_name + '.txt'
+                
                 with open(item_filename, 'w') as f:
                     f.write(item)
                 results[item_name + '_991'] = item_if_ex991
+
+                # record the relative dir
+                item_relative_dir = '8-K/' + cik + '/' + txt_filename + '_' + item_name + '.txt'
+                results[item_name + '_path'] = item_relative_dir
                     
             results['ex991'] = flag_ex991
             if flag_if991 > 0:
@@ -279,40 +286,50 @@ class Parsing8K:
             else:
                 idx_list_cut.append(idx_list[i * num_per_job:])
                 
-        # create an empty df to save the result
-        output = pd.DataFrame()
+
         
         # the func to be run in each thread
         def multi_run(sub_idx_list):
             sub_df = self.panel_df.loc[sub_idx_list,:]
+            info_names = list(sub_df.columns)
+        
             for idx in sub_idx_list:
-                file = sub_df.loc[idx, 'FileName']
+                file = sub_df.loc[idx, 'f_name']
                 results = self.export_single_file(file)
                 
-                values = list(results.values())
-                
                 # fill in the results of extraction
-                sub_df.loc[idx,['Ex991_y', 'Ex991_any', 
-                                'I202_y', 'I701_y', 'I801_y',
-                                'I202_if991','I701_if991','I801_if991']] = values
+                for key, value in results.items():
+                    sub_df.loc[idx, key] = value
+
                 
-                if results['ex991'] == 1:
-                    sub_df.loc[idx, 'Ex991_adrs'] = '8-K' + file.split('.')[0].split('/')[-1] + '_ex991.txt'
+                # if results['ex991'] == 1:
+                #     sub_df.loc[idx, 'Ex991_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_ex991.txt'
                     
-                if results['item202'] == 1:
-                    sub_df.loc[idx, 'I202_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item202.txt'
+                # if results['item202'] == 1:
+                #     sub_df.loc[idx, 'I202_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item202.txt'
                 
-                if results['item701'] == 1:
-                    sub_df.loc[idx, 'I701_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item701.txt'
+                # if results['item701'] == 1:
+                #     sub_df.loc[idx, 'I701_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item701.txt'
                 
-                if results['item801'] == 1:
-                    sub_df.loc[idx, 'I801_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item801.txt'
-            
+                # if results['item801'] == 1:
+                #     sub_df.loc[idx, 'I801_adrs'] = '8-K/' + file.split('.')[0].split('/')[-1] + '_item801.txt'
+            original_names = ['ex991','if_ex991', 'ex991_path',
+                            'item202', 'item202_path', 'item202_991',
+                            'item701', 'item701_path', 'item701_991',
+                            'item801', 'item801_path', 'item801_991']
+            sub_df = sub_df.loc[:, info_names + original_names]
+            new_names = ['Ex991_y', 'Ex991_any', 'Ex991_adrs',
+                        'I202_y', 'I202_adrs', 'I202_if991',
+                        'I701_y', 'I701_adrs', 'I701_if991',
+                        'I801_y', 'I801_adrs', 'I801_if991']
+            sub_df.columns = info_names + new_names
+
             return sub_df
         
         # apply threading
         output_dfs = Parallel(n_jobs=jobs, verbose=5)(delayed(multi_run)(sub_list) for sub_list in idx_list_cut)
-        
+        # create an empty df to save the result
+        output = pd.DataFrame()
         # aggregate sub-dfs created by the threading
         for sub_df in output_dfs:
             output = pd.concat([output, sub_df])
