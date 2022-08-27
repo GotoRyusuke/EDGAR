@@ -157,4 +157,5 @@ if __name__ == '__main__':
     parser = Parsing10K(panel_df_path = panel_df_path,
                         store_path = store_path)
     
-    sup_10K = parser.threading(2)
+    sup_10K = parser.threading(3)
+    
