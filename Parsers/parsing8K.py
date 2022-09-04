@@ -15,11 +15,7 @@ CONTENTS
 
 OTHER INFO.
 -----------
-- Last upate: R4/8/8(Getsu)
-- Author: GOTO Ryusuke 
-- Contact: 
-    - Email: yuhang1012long@link.cuhk.edu.hk (preferred)
-    - WeChat: L13079237
+- Last upate: R4/8/28(Nichi)
 
 '''
 from bs4 import BeautifulSoup
@@ -325,11 +321,11 @@ class Parsing8K:
         return output
 
 if __name__ == '__main__':
-    store_path = 'F:/EDGAR/Extracted/8-K'
-    panel_df_path = 'F:/EDGAR/2022Q2_8-K.xlsx'
+    store_path = 'F:/EDGAR/2022Q2_extracted/8-K'
+    panel_df_path = 'F:/EDGAR/2022Q2_8-K_sup.xlsx'
     
     parser = Parsing8K(panel_df_path, store_path)
-    form8k_df = parser.threading(4)
-    form8k_df.to_excel('F:/EDGAR/2022Q2_8-K_ver2.xlsx', index = False)
+    sup_8k = parser.threading(4)
+    # form8k_df.to_excel('F:/EDGAR/2022Q2_8-K_ver2.xlsx', index = False)
 
         

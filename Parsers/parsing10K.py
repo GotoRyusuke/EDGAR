@@ -152,10 +152,10 @@ class Parsing10K:
 
 if __name__ == '__main__':
     panel_df_path = 'F:/EDGAR/2022Q2_10-K_sup.xlsx'
-    store_path = 'F:/EDGAR/TestStore'
+    store_path = 'F:/EDGAR/2022Q2_extracted/10-K'
     
     parser = Parsing10K(panel_df_path = panel_df_path,
                         store_path = store_path)
     
-    sup_10K = parser.threading(3)
-    sup_10K.to_excel('F:/EDGAR/summary_2022Q2_10-K_sup.xlsx', index = False)
+    sup_10K = parser.threading(4)
+    # sup_10K.to_excel('F:/EDGAR/summary_2022Q2_10-K_sup.xlsx', index = False)

@@ -13,11 +13,7 @@ CONTENTS
 
 OTHER INFO.
 -----------
-- Last upate: R4/8/20(Do)
-- Author: GOTO Ryusuke 
-- Contact: 
-    - Email: yuhang1012long@link.cuhk.edu.hk (preferred)
-    - WeChat: L13079237
+- Last upate: R4/8/28(Nichi)
 
 '''
 from bs4 import BeautifulSoup
@@ -159,17 +155,25 @@ class Parsing10Q:
         output = pd.DataFrame()
         def multi_run(sub_idx_list):
             sub_df = self.panel_df.loc[sub_idx_list,:]
+            info_names = list(sub_df.columns)
             for idx in sub_idx_list:
-                file = sub_df.loc[idx, 'FileName']
-                print(file)
+                file = sub_df.loc[idx, 'f_name']
                 results = self.export_single_file(file)
-                
-                values = list(results.values())
-                sub_df.loc[idx,['I2_y', 'I2_adrs',
-                                'I1A_y', 'I1A_adrs',
-                                'I1A_if10k', 'I1A_ifnos'
-                                 ]] = values
 
+                for key, value in results.items():
+                    sub_df.loc[idx, key] = value
+
+            original_names = ['item2', 'item2_path',
+                               'item1a', 'item1a_path',
+                               'if10k', 'ifnos']
+            sub_df = sub_df.loc[:, info_names + original_names]
+            new_names = ['I2_y', 'I2_adrs',
+                        'I1A_y', 'I1A_adrs',
+                        'I1A_if10k', 'I1A_ifnos'
+                         ]
+            
+            sub_df.columns = info_names + new_names
+            
             return sub_df
         
         output_dfs = Parallel(n_jobs=jobs, verbose=1)(delayed(multi_run)(sub_list) for sub_list in idx_list_cut)
@@ -180,9 +184,9 @@ class Parsing10Q:
         return output
     
 if __name__ == '__main__':
-    store_path = 'F:/EDGAR/Extracted/10-Q'
-    panel_df_path = 'F:/EDGAR/2022Q2_10-Q_dropdup.xlsx'
+    panel_df_path = 'F:/EDGAR/2022Q2_10-Q_sup.xlsx'
+    store_path = 'F:/EDGAR/2022Q2_extracted/10-Q'
     
     parser = Parsing10Q(panel_df_path,store_path)
-    form10q_df = parser.threading(2)
-    form10q_df.to_excel('F:/EDGAR/2022Q2_10-Q_ver2.xlsx', index = False)
+    sup_10Q = parser.threading(4)
+    # sup_10Q.to_excel('F:/EDGAR/summary_10-Q_sup.xlsx', index = False)

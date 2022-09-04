@@ -13,11 +13,8 @@ CONTENTS
 
 OTHER INFO.
 -----------
-- Last upate: R4/8/9(Ka)
-- Author: GOTO Ryusuke 
-- Contact: 
-    - Email: yuhang1012long@link.cuhk.edu.hk (preferred)
-    - WeChat: L13079237
+- Last upate: R4/8/19(Kin)
+
 
 '''
 from bs4 import BeautifulSoup
