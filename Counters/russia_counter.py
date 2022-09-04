@@ -133,6 +133,7 @@ class RussiaCounter:
 
 if __name__ == "__main__":
     russia_counter = RussiaCounter()
-    s1 = "Russia engineering and Volkov. U on the ukraine Orthodox Christianity safety R&D based on! The customer ballistic missile submarines we'd done."
+    # s1 = "Russia engineering and Volkov. U on the ukraine Orthodox Christianity safety R&D based on! The customer ballistic missile submarines we'd done."
+    s1 = 'Vladimir Putin recently launched his plan to invade Ukraine. There is an outbreak of hostility among Ukranians, which is not a piece of good news to the Wall Street. Such a war reminds the West of the former Soviet Union.'
     print(russia_counter.count_by_dict(s1))
 

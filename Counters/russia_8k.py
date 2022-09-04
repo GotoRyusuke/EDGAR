@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import os
 from russia_counter_lemma import RussiaCounter
-import time
 from tqdm import tqdm
 
 
@@ -16,13 +15,14 @@ def file_list(path):
 class RussiaNum:
     def __init__(self, data_name):
         self.data_name = data_name
-        self.panel_data_path = "./" + "summary_2022Q2_" + data_name + ".xlsx"
+        self.panel_data_path = "./" + "summary_2022Q1_" + data_name + ".xlsx"
         self.panel_df = pd.read_excel(self.panel_data_path)
         
         # initialise the counter module
         self.russia_counter = RussiaCounter()
         # indicator
-        self.indicators = ["rus+ukr+war_dummy", "rus_word_num", "rus_sent_num", "rus_name_word_num", "rus_name_sent_num",
+        self.indicators = ["rus+ukr+war_dummy", 'rus+ukr+war_lemma_word_num', 'rus+ukr+war_lemma_sent_num',
+                            "rus_word_num", "rus_sent_num", "rus_name_word_num", "rus_name_sent_num",
                            "total_word_num", "total_sent_num"]
         
         self.item_name_list = []
@@ -34,12 +34,11 @@ class RussiaNum:
                     self.panel_df[item_name + "_" + ind] = np.nan
 
     def count(self):
-        start_time = time.time()
-        for i in tqdm(range(len(self.panel_df))):
+        for i in tqdm(range(len(self.panel_df)), ncols = 100):
             for item_name in self.item_name_list:
                 if pd.isna(self.panel_df.loc[i, item_name + "_adrs"]):
                     continue
-                item_path = "F:/EDGAR/2022Q2_extracted/" + self.panel_df.loc[i, item_name + "_adrs"]
+                item_path = "F:/EDGAR/2022Q1_extracted/" + self.panel_df.loc[i, item_name + "_adrs"]
                 if not pd.isna(item_path) and os.path.exists(item_path):
                     with open(item_path, "r", encoding="gbk") as f:
                         text = f.read()
@@ -51,6 +50,11 @@ class RussiaNum:
 
 if __name__ == "__main__":
     # os.getcwd()
-    russia_num = RussiaNum(data_name = '10-Q')
-    new_panel_df = russia_num.count()
-    new_panel_df.to_excel("F:/EDGAR/word_freq/new_summary_2022Q2_lemma/new_summary_2022Q2_" + russia_num.data_name + "(lemma).xlsx", index=False)
+    for form in ['8-K', '10-Q', '10-K']:
+        russia_num = RussiaNum(data_name = form)
+        new_panel_df = russia_num.count()
+        new_panel_df.to_excel("F:/EDGAR/word_freq/new_summary_22Q1_lemma_2/new_summary_2022Q1_" + russia_num.data_name + "(lemma)_ver2.xlsx", index=False)
+
+    # russia_num = RussiaNum(data_name = '10-K')
+    # new_panel_df = russia_num.count()
+    # new_panel_df.to_excel("F:/EDGAR/word_freq/new_summary_22Q1_lemma_2/new_summary_2022Q1_" + russia_num.data_name + "(lemma)_ver2.xlsx", index=False)

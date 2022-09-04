@@ -15,11 +15,7 @@ CONTENTS
 
 OTHER INFO.
 -----------
-- Last upate: R4/8/9(Ka)
-- Author: GOTO Ryusuke 
-- Contact: 
-    - Email: yuhang1012long@link.cuhk.edu.hk (preferred)
-    - WeChat: L13079237
+- Last upate: R4/9/3(Do)
 
 '''
 import pandas as pd
@@ -220,7 +216,10 @@ class RussiaCounter:
         """
         whole words, whole sentences, three dicts
         """
-        self.dummy_dict = ["russia", "ukraine", "war", "russian", "ukrainian"]
+        self.dummy_dict = ['russia', "russia's", 'russian', 'russians', "russian's", "russians'",
+                           'ukraine', "ukraine's", 'ukrainian', 'ukrainians', "ukrainian's", "ukrainians'",
+                           'war', 'wars']
+        
         self.words_freq_dict = {}
         rus_list = list(pd.read_excel("rus_dict_lemma.xlsx", engine="openpyxl", header=None)[0])
         rus_name_list = list(pd.read_excel("rus_names.xlsx", engine="openpyxl", header=None)[1])
@@ -228,7 +227,7 @@ class RussiaCounter:
         rus_name_list = [w.strip().lower().split() if not w.isupper() else w.strip().split() for w in rus_name_list]
         self.words_freq_dict["rus_name"] = rus_name_list
         self.words_freq_dict["rus"] = rus_list
-
+        
     def summary_one_dict(self, dict_name, text_words: list, text_sentences: list):
         # dict
         if dict_name == "dummy":
