@@ -21,7 +21,7 @@ class RussiaNum:
         # initialise the counter module
         self.russia_counter = RussiaCounter()
         # indicator
-        self.indicators = ["rus+ukr+war_dummy", 'rus+ukr+war_lemma_word_num', 'rus+ukr+war_lemma_sent_num',
+        self.indicators = ["rus+ukr+war_dummy",
                             "rus_word_num", "rus_sent_num", "rus_name_word_num", "rus_name_sent_num",
                            "total_word_num", "total_sent_num"]
         
