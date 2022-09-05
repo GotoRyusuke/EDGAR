@@ -1,5 +1,8 @@
 # EDGAR（美国证券交易委员会EDGAR报表爬取及报表项目抽取）
 -------------------------------------------------
+### (R4/09/06) Updates
+Aggregated two counters to a single counter module named `russia_counters` under `Counters`. The main module is renamed to `russia_main`
+
 ### (R4/09/05) Updates
 Added `EdgarParser` that utilises all 3 parsers so as to make the procedure simpler
 
