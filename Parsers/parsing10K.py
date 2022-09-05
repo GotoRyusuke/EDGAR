@@ -94,9 +94,9 @@ class Parsing10K:
             content = f.read()
         
         results = {'item1a':0, 
-                    'item1a_path': ' ', 
+                    'item1a_path': '', 
                     'item7':0, 
-                    'item7_path': ' '}
+                    'item7_path': ''}
         for item_name in ['item1a', 'item7']:
             try:
                 docs, item_tb = self.strategies.first_method(content)
@@ -148,7 +148,21 @@ class Parsing10K:
             output = pd.concat([output, sub_df])
         output.sort_values(by = ['CIK'], inplace = True)
         output.reset_index(drop = True, inplace = True)
-        return output
+
+        ''' 
+        Note that we separate summary_10K into 2 individual tables, one saving the results for Item 1A
+        and the other for Item7. This procedure is specific to my taks and you do not have to follow
+        '''
+        
+        basic_info = ['CIK', 'co_name', 'f_date', 'f_type']
+        vars = ['_y', '_adrs', '_rus+ukr+war_dummy', 
+                '_rus_word_num', '_rus_sent_num',
+                '_rus_name_word_num', '_rus_name_sent_num', 
+                '_total_word_num', '_total_sent_num']
+
+        i1a_df = output.loc[:, basic_info + ['I1A'+ var for var in vars]]
+        i7_df = output.loc[:, basic_info + ['I7'+ var for var in vars]]
+        return i1a_df, i7_df
 
 if __name__ == '__main__':
     panel_df_path = 'F:/EDGAR/2022Q2_10-K_sup.xlsx'
@@ -157,5 +171,4 @@ if __name__ == '__main__':
     parser = Parsing10K(panel_df_path = panel_df_path,
                         store_path = store_path)
     
-    sup_10K = parser.threading(4)
-    # sup_10K.to_excel('F:/EDGAR/summary_2022Q2_10-K_sup.xlsx', index = False)
+    sup_10K, sup10K_ITem7 = parser.threading(4)

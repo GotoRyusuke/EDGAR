@@ -20,7 +20,6 @@ OTHER INFO.
 '''
 from bs4 import BeautifulSoup
 import pandas as pd
-import re
 import os
 from joblib import Parallel, delayed
 from matching_strategies import  cut_unreadable, item_detector
@@ -195,10 +194,10 @@ class Parsing8K:
             content = f.read()
         
         # extract and export Exhibit 99.1, item 2.02, item 7.01, and item 8.01, if found
-        results = {'ex991':0,'if_ex991':0, 'ex991_path': ' ',
-                   'item202':0, 'item202_path': ' ', 'item202_991': 0,
-                   'item701':0, 'item701_path': ' ', 'item701_991': 0,
-                   'item801':0, 'item801_path': ' ', 'item801_991': 0}
+        results = {'ex991':0,'if_ex991':0, 'ex991_path': '',
+                   'item202':0, 'item202_path': '', 'item202_991': 0,
+                   'item701':0, 'item701_path': '', 'item701_991': 0,
+                   'item801':0, 'item801_path': '', 'item801_991': 0}
 
         # extract Exhibit 99.1 and export, if found
         flag_ex991 = 0
