@@ -45,7 +45,7 @@ class edgar_parser:
 
         '''
         if not file_name:
-            file_name = summary_df_path + file_name
+            file_name = summary_df_path + '/' + file_name
         else:
             file_name = summary_df_path + f'/summary_{self.form_type}'
         
