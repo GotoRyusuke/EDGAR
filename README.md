@@ -1,4 +1,9 @@
 # EDGAR（美国证券交易委员会EDGAR报表爬取及报表项目抽取）
+-------------------------------------------------
+### (R4/09/05) Updates
+Added `EdgarParser` that utilises all 3 parsers so as to make the procedure simpler
+
+### Introduction
 This is a project to:
 - :heavy_check_mark: crawl firm statements & periodic reports from [EDGAR](https://www.sec.gov/edgar.shtml), a system constructed by SEC for firms to upload their statements & reports as well as for investors to check the operation of the firms they care;
 - :heavy_check_mark: extract info about **risks** from the reports;specifically, it would be some **items** that we want to extract and analyse;
@@ -11,7 +16,7 @@ It would be not easy to crawl EDGAR without the help of a package from R called 
 
 After the crawling is done, we define a func (check[`edgarCrawler`](./Crawling/edgarCrawler.R) for details) to help us record and export the filing info to an excel file, including firm CIK codes, filing date, file name, etc.
 
-### 2. ITEM EXTRACTION
+### 2. FORM PARSERS & ITEM EXTRACTION
 In this part, we develop several parser classes to extract specific items from different forms, namely:
 - Item1A & Item7 under form 10-K;
 - Part1 Item2 & PartII Item1A under form 10-Q, and
