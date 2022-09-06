@@ -6,7 +6,12 @@ from tqdm import tqdm
 
 class RussiaNum:
     def __init__(self, summary_file_name: str, store_path: str, mode: str):
-        self.panel_df = pd.read_excel(summary_file_name)
+        panel_df = pd.read_excel(summary_file_name)
+        panel_df['f_date'] = [date.strftime('%Y-%m-%d')
+                              if not isinstance(date, str)
+                              else date
+                              for date in panel_df['f_date']]
+        self.panel_df = panel_df
         self.store_path = store_path
         
         # initialise the counter module
