@@ -7,7 +7,7 @@ called '10-K_forms_2021Q1-2022Q1.xlsx'
 - Let us explore how to call the module and let it parse our 10-K forms and export the summary tables
 
 '''
-
+import pandas as pd
 from EdgarParser import edgar_parser
 
 store_path = 'F:/EDGAR/Extracted/10-K'
@@ -19,8 +19,8 @@ parser = edgar_parser(form_type = '10-K',
                       panel_df_path = panel_df_path)
 
 parser.run(summary_df_path = summary_df_path,
-           jobs = 32,
-           file_name = 'summary_2021Q1-2022Q2_10-K')
+            jobs = 32,
+            file_name = 'summary_2021Q1-2022Q2_10-K')
 
 '''
 After the parsing is done, there will be two excel files under F:/EDAGR:

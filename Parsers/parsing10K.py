@@ -155,10 +155,7 @@ class Parsing10K:
         '''
         
         basic_info = ['CIK', 'co_name', 'f_date', 'f_type']
-        vars = ['_y', '_adrs', '_rus+ukr+war_dummy', 
-                '_rus_word_num', '_rus_sent_num',
-                '_rus_name_word_num', '_rus_name_sent_num', 
-                '_total_word_num', '_total_sent_num']
+        vars = ['_y', '_adrs']
 
         i1a_df = output.loc[:, basic_info + ['I1A'+ var for var in vars]]
         i7_df = output.loc[:, basic_info + ['I7'+ var for var in vars]]
@@ -166,9 +163,9 @@ class Parsing10K:
 
 if __name__ == '__main__':
     panel_df_path = 'F:/EDGAR/2022Q2_10-K_sup.xlsx'
-    store_path = 'F:/EDGAR/2022Q2_extracted/10-K'
+    store_path = 'F:/EDGAR/test'
     
     parser = Parsing10K(panel_df_path = panel_df_path,
                         store_path = store_path)
     
-    sup_10K, sup10K_ITem7 = parser.threading(4)
+    sup_10K, sup10K_ITem7 = parser.threading(2)

@@ -44,17 +44,30 @@ class edgar_parser:
         and the other for Item7. This procedure is specific to my taks and you do not have to follow
 
         '''
-        if not file_name:
-            file_name = summary_df_path + '/' + file_name
+        if isinstance(file_name, str):
+            new_name = summary_df_path + '/' + file_name
         else:
-            file_name = summary_df_path + f'/summary_{self.form_type}'
+            new_name = summary_df_path + f'/summary_{self.form_type}'
         
         if self.form_type == '10-K':
             summary_df_I1A, summary_df_I7 = self.parser.threading(jobs = jobs)
-            summary_df_I1A.to_excel(file_name + '.xlsx', index = False)
-            summary_df_I7.to_excel(file_name + '_Item7.xlsx', index = False)
+            summary_df_I1A.to_excel(new_name + '.xlsx', index = False)
+            summary_df_I7.to_excel(new_name + '_Item7.xlsx', index = False)
         else:
             summary_df = self.parser.threading(jobs = jobs)
-            summary_df.to_excel(file_name + '.xlsx', index = False)
+            summary_df.to_excel(new_name + '.xlsx', index = False)
+            
+if __name__ == '__main__':
+    store_path = 'F:/EDGAR/test'
+    panel_df_path = 'F:/EDGAR/2022Q2_10-K_sup2.xlsx'
+    summary_df_path = 'F:/EDGAR'
+
+    parser = edgar_parser(form_type = '10-K', 
+                          store_path = store_path,
+                          panel_df_path = panel_df_path)
+
+    parser.run(summary_df_path = summary_df_path,
+                jobs = 2,
+                file_name = 'test_10-K')
 
         
