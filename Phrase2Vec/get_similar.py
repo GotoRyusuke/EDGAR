@@ -20,10 +20,7 @@ CONTENTS
 OTHER INFO.
 -----------
 - Last upate: R4/7/27(Sui)
-- Author: GOTO Ryusuke 
-- Contact: 
-    - Email: yuhang1012long@link.cuhk.edu.hk (preferred)
-    - WeChat: L13079237
+
 '''
 
 import os
