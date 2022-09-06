@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 from collections import Counter
+
 def cut_sentence(talk_content):
     talk_sentences = []
     talk_words = talk_content.split()
@@ -25,11 +26,18 @@ def find_first_word_index(phrases: list, sentence: list):
         first_word_star = phrase[0]
         if first_word_star not in first_words_index_dict.keys():
             first_word_index = []
-            first_word = first_word_star
-            for w_i in range(len(sentence)):
-                w = sentence[w_i]
-                if w == first_word:
-                    first_word_index.append(w_i)
+            if '*' in first_word_star:
+                first_word = first_word_star.split('*')[0]
+                for w_i in range(len(sentence)):
+                    w = sentence[w_i]
+                    if w[:len(first_word)] == first_word:
+                        first_word_index.append(w_i)
+            else:
+                first_word = first_word_star
+                for w_i in range(len(sentence)):
+                    w = sentence[w_i]
+                    if w == first_word:
+                        first_word_index.append(w_i)
             first_words_index_dict[first_word_star] = first_word_index
     return first_words_index_dict
 
@@ -40,9 +48,17 @@ def phrase_in_sentence(phrase: list,  first_word_index: list, sentence: list):
             if f_idx + kw_i >= len(sentence):
                 return False
             kw = phrase[kw_i]
-            if sentence[f_idx+kw_i] != kw:
-                flag = False
-                break
+            if '*' in kw:
+                kw = kw.split('*')[0]
+            
+                if sentence[f_idx+kw_i][:len(kw)] != kw:
+                    flag = False
+                    break
+            else:
+                if sentence[f_idx+kw_i][:len(kw)] != kw:
+                    flag = False
+                    break
+                
         if flag:
             return True
     return False
@@ -50,17 +66,32 @@ def phrase_in_sentence(phrase: list,  first_word_index: list, sentence: list):
 def count_words_in_text(words_list, text_words):
     dict_count = 0
     words_counter = dict(Counter(text_words))
+    counter_keys = list(words_counter.keys())
+    
     for words in words_list:
         if len(words) == 1:
-            if words[0] in words_counter.keys():
-                dict_count += words_counter[words[0]]
+            kw = words[0]  
+            if '*' not in kw:
+                if words[0] in words_counter.keys():
+                    dict_count += words_counter[words[0]]
+            else:
+                kw = kw.split("*")[0]
+                for key in counter_keys:
+                    if key[:len(kw)] == kw:
+                        dict_count += words_counter[key]
         else:
             for w_i in range(len(text_words)):
                 flag = True
                 for p_w_i, p_w in enumerate(words):
-                    if w_i + p_w_i >= len(text_words) or p_w != text_words[w_i + p_w_i]:
-                        flag = False
-                        break
+                    if '*' not in p_w:
+                        if w_i + p_w_i >= len(text_words) or p_w != text_words[w_i + p_w_i]:
+                            flag = False
+                            break
+                    else:
+                        p_w = p_w.split('*')[0]
+                        if w_i + p_w_i >= len(text_words) or p_w != text_words[w_i + p_w_i][:len(p_w)]:
+                            flag = False
+                            break
                 if flag:
                     dict_count += 1
     return dict_count
@@ -172,3 +203,5 @@ class RussiaCounter_Lemma:
         rus_name_w_count, rus_name_s_count = self.summary_one_dict(dict_name="rus_name", text_words=text_words, text_sentences=text_sentences)
 
         return dummy_var, rus_w_count, rus_s_count, rus_name_w_count, rus_name_s_count, len(text_words), len(text_sentences)
+
+    
